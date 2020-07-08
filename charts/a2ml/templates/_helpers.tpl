@@ -61,3 +61,55 @@ Create the name of the service account to use
 {{- default "default" .Values.serviceAccount.name }}
 {{- end }}
 {{- end }}
+
+{{/*
+Construct the `minio.fullname` of the minio sub-chart.
+Used to discover the Service and Secret name created by the sub-chart.
+*/}}
+{{- define "a2ml.minio.fullname" -}}
+{{- if .Values.minio.fullnameOverride -}}
+{{- .Values.minio.fullnameOverride | trunc 63 | trimSuffix "-" -}}
+{{- else -}}
+{{- $name := default "minio" .Values.minio.nameOverride -}}
+{{- if contains $name .Release.Name -}}
+{{- .Release.Name | trunc 63 | trimSuffix "-" -}}
+{{- else -}}
+{{- printf "%s-%s" .Release.Name $name | trunc 63 | trimSuffix "-" -}}
+{{- end -}}
+{{- end -}}
+{{- end -}}
+
+
+{{/*
+Construct the `etcd.fullname` of the etcd sub-chart.
+Used to discover the Service and Secret name created by the sub-chart.
+*/}}
+{{- define "a2ml.etcd.fullname" -}}
+{{- if .Values.etcd.fullnameOverride -}}
+{{- .Values.etcd.fullnameOverride | trunc 63 | trimSuffix "-" -}}
+{{- else -}}
+{{- $name := default "etcd" .Values.etcd.nameOverride -}}
+{{- if contains $name .Release.Name -}}
+{{- .Release.Name | trunc 63 | trimSuffix "-" -}}
+{{- else -}}
+{{- printf "%s-%s" .Release.Name $name | trunc 63 | trimSuffix "-" -}}
+{{- end -}}
+{{- end -}}
+{{- end -}}
+
+{{/*
+Construct the `vault.fullname` of the vault sub-chart.
+Used to discover the Service and Secret name created by the sub-chart.
+*/}}
+{{- define "a2ml.vault.fullname" -}}
+{{- if .Values.vault.fullnameOverride -}}
+{{- .Values.vault.fullnameOverride | trunc 63 | trimSuffix "-" -}}
+{{- else -}}
+{{- $name := default "vault" .Values.vault.nameOverride -}}
+{{- if contains $name .Release.Name -}}
+{{- .Release.Name | trunc 63 | trimSuffix "-" -}}
+{{- else -}}
+{{- printf "%s-%s" .Release.Name $name | trunc 63 | trimSuffix "-" -}}
+{{- end -}}
+{{- end -}}
+{{- end -}}

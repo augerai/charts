@@ -43,10 +43,6 @@ spec:
             value: {{ .Values.s3_endpoint_url }}
           - name: BROKER_URL
             value: {{ .Values.broker_url }}
-          - name: NOTIFICATOR_REDIS_HOST
-            value: {{ .Values.notificator_redis_host }}
-          - name: NOTIFICATOR_REDIS_PORT
-            value: {{ .Values.notificator_redis_port }}
       {{- with .Values.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}
