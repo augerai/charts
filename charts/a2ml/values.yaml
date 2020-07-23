@@ -4,6 +4,9 @@
 
 replicaCount: 1
 
+# RabbitMQ broker url for celery workers
+brokerUrl: ""
+
 image:
   repository: augerai/a2ml
   pullPolicy: IfNotPresent
@@ -83,13 +86,22 @@ affinity: {}
 etcd:
   persistence:
     enabled: false
-  # nodeSelector:
-  #   role: operations
-  statefulset:
-    replicaCount: 3
 
 vault:
-  enabled: false
+  enabled: true
+  injector:
+    enabled: true
+  namespaceSelector:
+    matchLabels:
+      injection: enabled
+  standalone:
+    enabled: true
+  service:
+    enabled: true
+  dataStorage:
+    enabled: true
+    size: 1Gi
+    accessMode: ReadWriteOnce
 
 minio:
   enabled: true
@@ -97,17 +109,15 @@ minio:
     - name: auger-a2ml-incoming
       policy: none
       purge: false
-  # environment:
-  #   MINIO_CACHE_EXPIRY: "30"
-  #   MINIO_CACHE_MAXUSE: "80"
-  #   MINIO_CACHE_DRIVES: "/tmp"
+  environment:
+    MINIO_CACHE_EXPIRY: "30"
+    MINIO_CACHE_MAXUSE: "80"
+    MINIO_CACHE_DRIVES: "/tmp"
   mode: standalone
   replicas: 1
   resources: 
     requests:
       cpu: 100m
       memory: 100Mi
-  # nodeSelector:
-  #   role: operations
   podAnnotations:
     cluster-autoscaler.kubernetes.io/safe-to-evict: "false"

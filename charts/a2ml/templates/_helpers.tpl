@@ -44,6 +44,30 @@ app.kubernetes.io/managed-by: {{ .Release.Service }}
 {{- end }}
 
 {{/*
+Set default pod annotations if vault is enabled
+*/}}
+{{- define "a2ml.podAnnotations" -}}
+{{- if .Values.podAnnotations }}
+{{ .Values.podAnnotations }}
+{{- end }}
+{{- if .Values.vault.enabled }}
+vault.hashicorp.com/agent-inject: "true"
+vault.hashicorp.com/agent-inject-secret-azure-creds: "azure/creds/a2ml"
+vault.hashicorp.com/agent-inject-template-azure-creds: |
+  export AZURE_CREDENTIALS='{
+    "subscription_id": "{{ .Values.vaultSubscriptionId }}",
+    "directory_tenant_id": "{{ .Values.vaultTenantId }}",
+  {{`{{- with secret "azure/creds/a2ml" -}}
+    "application_client_id": "{{ .Data.client_id }}",
+    "client_secret": "{{ .Data.client_secret}}"
+  {{- end }}`}}
+  }'
+vault.hashicorp.com/role: "app"
+{{- end }}
+{{- end }}
+
+
+{{/*
 Selector labels
 */}}
 {{- define "a2ml.selectorLabels" -}}
@@ -79,6 +103,12 @@ Used to discover the Service and Secret name created by the sub-chart.
 {{- end -}}
 {{- end -}}
 
+{{/*
+Construct the `a2ml.s3EndpointUrl` for a2ml workers.
+*/}}
+{{- define "a2ml.s3EndpointUrl" -}}
+{{- printf "http://%s.%s.svc.%s:9000" (include "a2ml.minio.fullname" .) .Release.Namespace .Values.clusterDomain }}
+{{- end -}}
 
 {{/*
 Construct the `etcd.fullname` of the etcd sub-chart.

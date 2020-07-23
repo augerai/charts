@@ -1,12 +1,12 @@
 dependencies:
 - name: minio
   repository: https://kubernetes-charts.storage.googleapis.com/
-  version: 5.0.30
+  version: 5.0.32
 - name: etcd
   repository: https://charts.bitnami.com/bitnami
-  version: 4.8.7
+  version: 4.8.14
 - name: vault
   repository: https://helm.releases.hashicorp.com
   version: 0.6.0
-digest: sha256:501be4255f6c4234e7cda4a6a7dd78e5d3e685cdabe4598547046fda692d569e
-generated: "2020-07-08T15:20:22.911886-07:00"
+digest: sha256:5684994776a4b6324faff233c5f2e5bece2095067bdaae98b8e25cccb04d8f46
+generated: "2020-07-21T08:30:40.965154-07:00"

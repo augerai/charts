@@ -13,10 +13,8 @@ spec:
       {{- include "a2ml.selectorLabels" . | nindent 6 }}
   template:
     metadata:
-    {{- with .Values.podAnnotations }}
       annotations:
-        {{- toYaml . | nindent 8 }}
-    {{- end }}
+        {{- include "a2ml.podAnnotations" . | nindent 8 }}
       labels:
         {{- include "a2ml.selectorLabels" . | nindent 8 }}
     spec:
@@ -29,9 +27,12 @@ spec:
         {{- toYaml .Values.podSecurityContext | nindent 8 }}
       containers:
         - name: {{ .Chart.Name }}
-          command:
-          - a2ml
-          - worker
+          command: ["/bin/bash", "-c"]
+          {{- if .Values.vault.enabled }}
+          args: ["source /vault/secrets/azure-creds && a2ml worker"]
+          {{- else }}
+          args: ["a2ml worker"]
+          {{- end }}
           securityContext:
             {{- toYaml .Values.securityContext | nindent 12 }}
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
@@ -39,10 +40,18 @@ spec:
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
           env:
-          - name: S3_ENDPOINT_URL
-            value: {{ .Values.s3_endpoint_url }}
           - name: BROKER_URL
-            value: {{ .Values.broker_url }}
+            valueFrom:
+              secretKeyRef:
+                name: {{ template "a2ml.fullname" . }}
+                key: brokerUrl
+          {{- if .Values.minio.enabled }}
+          - name: S3_ENDPOINT_URL
+            valueFrom:
+              secretKeyRef:
+                name: {{ template "a2ml.fullname" . }}
+                key: s3EndpointUrl
+          {{- end -}}
       {{- with .Values.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}
