@@ -29,7 +29,7 @@ spec:
         - name: {{ .Chart.Name }}
           command: ["/bin/bash", "-c"]
           {{- if .Values.vault.enabled }}
-          args: ["source /vault/secrets/azure-creds && a2ml worker"]
+          args: ["a2ml worker"]
           {{- else }}
           args: ["a2ml worker"]
           {{- end }}
@@ -40,6 +40,8 @@ spec:
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
           env:
+          - name: AZURE_CREDENTIALS_FILE
+            value: /vault/secrets/azure-creds
           - name: BROKER_URL
             valueFrom:
               secretKeyRef:
