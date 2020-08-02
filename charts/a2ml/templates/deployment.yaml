@@ -1,7 +1,7 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ include "a2ml.fullname" . }}-worker
+  name: {{ include "a2ml.fullname" . }}
   labels:
     {{- include "a2ml.labels" . | nindent 4 }}
 spec:
@@ -40,10 +40,10 @@ spec:
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
           env:
-          {{- if .Values.vault.enabled -}}
+          {{- if .Values.vault.enabled }}
           - name: AZURE_CREDENTIALS_PATH
             value: /vault/secrets/azure-creds
-          {{- end -}}
+          {{- end }}
           - name: BROKER_URL
             valueFrom:
               secretKeyRef:
@@ -55,7 +55,7 @@ spec:
               secretKeyRef:
                 name: {{ template "a2ml.fullname" . }}
                 key: s3EndpointUrl
-          {{- end -}}
+          {{- end }}
       {{- with .Values.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}
