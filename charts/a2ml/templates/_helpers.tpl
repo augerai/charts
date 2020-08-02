@@ -56,9 +56,10 @@ app.kubernetes.io/managed-by: {{ .Release.Service }}
 {{- end }}
 
 {{/*
-Set default pod annotations if vault is enabled
+Set default pod annotations
 */}}
 {{- define "a2ml.podAnnotations" -}}
+rollme: {{ randAlphaNum 5 | quote }}
 {{- if .Values.podAnnotations }}
 {{ .Values.podAnnotations }}
 {{- end }}
