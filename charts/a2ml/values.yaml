@@ -7,6 +7,8 @@ replicaCount: 1
 # RabbitMQ broker url for celery workers
 brokerUrl: ""
 
+extraEnvironmentVars: {}
+
 image:
   repository: augerai/a2ml
   pullPolicy: IfNotPresent

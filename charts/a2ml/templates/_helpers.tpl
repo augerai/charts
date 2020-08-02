@@ -10,8 +10,8 @@ Expand the name of the chart.
 Extra Environment Variables
 */}}
 {{- define "a2ml.extraEnvironmentVars" -}}
-{{- if .extraEnvironmentVars -}}
-{{- range $key, $value := .extraEnvironmentVars }}
+{{- if .Values.extraEnvironmentVars -}}
+{{- range $key, $value := .Values.extraEnvironmentVars }}
 - name: {{ printf "%s" $key | replace "." "_" | upper | quote }}
   value: {{ $value | quote }}
 {{- end }}
