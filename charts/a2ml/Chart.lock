@@ -4,9 +4,9 @@ dependencies:
   version: 5.0.32
 - name: etcd
   repository: https://charts.bitnami.com/bitnami
-  version: 4.8.14
+  version: 4.9.1
 - name: vault
   repository: https://helm.releases.hashicorp.com
   version: 0.6.0
-digest: sha256:5684994776a4b6324faff233c5f2e5bece2095067bdaae98b8e25cccb04d8f46
-generated: "2020-07-21T08:30:40.965154-07:00"
+digest: sha256:72201bb24ac8e70e7532e8f57770168cdad73b2d4c453c3cdd57afb2388e311a
+generated: "2020-08-02T10:03:19.378587-07:00"
