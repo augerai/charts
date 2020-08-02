@@ -56,6 +56,7 @@ spec:
                 name: {{ template "a2ml.fullname" . }}
                 key: s3EndpointUrl
           {{- end }}
+          {{- include "a2ml.extraEnvironmentVars" .Values.extraEnvironmentVars | nindent 12 }}
       {{- with .Values.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}
