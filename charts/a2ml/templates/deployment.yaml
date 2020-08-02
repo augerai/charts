@@ -1,7 +1,7 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ include "a2ml.fullname" . }}
+  name: {{ include "a2ml.fullname" . }}-worker
   labels:
     {{- include "a2ml.labels" . | nindent 4 }}
 spec:
@@ -40,8 +40,10 @@ spec:
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
           env:
-          - name: AZURE_CREDENTIALS_FILE
+          {{- if .Values.vault.enabled -}}
+          - name: AZURE_CREDENTIALS_PATH
             value: /vault/secrets/azure-creds
+          {{- end -}}
           - name: BROKER_URL
             valueFrom:
               secretKeyRef:
