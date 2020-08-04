@@ -11,7 +11,7 @@ extraEnvironmentVars: {}
 
 image:
   repository: augerai/a2ml
-  pullPolicy: IfNotPresent
+  pullPolicy: Always
   # Overrides the image tag whose default is the chart appVersion.
   tag: ""
 
@@ -117,7 +117,7 @@ minio:
     MINIO_CACHE_DRIVES: "/tmp"
   mode: standalone
   replicas: 1
-  resources: 
+  resources:
     requests:
       cpu: 100m
       memory: 100Mi
