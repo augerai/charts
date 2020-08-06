@@ -31,7 +31,7 @@ spec:
           {{- if .Values.vault.enabled }}
           args: ["a2ml worker"]
           {{- else }}
-          args: ["a2ml worker"]
+          args: ["a2ml worker --concurrency=4"]
           {{- end }}
           securityContext:
             {{- toYaml .Values.securityContext | nindent 12 }}
