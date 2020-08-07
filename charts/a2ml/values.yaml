@@ -85,6 +85,8 @@ tolerations: []
 
 affinity: {}
 
+workerConcurrency: 4
+
 etcd:
   persistence:
     enabled: false

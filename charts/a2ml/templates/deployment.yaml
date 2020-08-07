@@ -28,11 +28,7 @@ spec:
       containers:
         - name: {{ .Chart.Name }}
           command: ["/bin/bash", "-c"]
-          {{- if .Values.vault.enabled }}
-          args: ["a2ml worker"]
-          {{- else }}
-          args: ["a2ml worker --concurrency=4"]
-          {{- end }}
+          args: ["a2ml worker --concurrency={{ .Values.workerConcurrency }}"]
           securityContext:
             {{- toYaml .Values.securityContext | nindent 12 }}
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
