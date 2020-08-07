@@ -3,6 +3,35 @@ entries:
   a2ml:
   - apiVersion: v2
     appVersion: v0.4.0
+    created: "2020-08-07T23:07:54.952051147Z"
+    dependencies:
+    - condition: minio.enabled
+      name: minio
+      repository: https://kubernetes-charts.storage.googleapis.com/
+      tags:
+      - storage
+      version: 5.0.32
+    - condition: minio.enabled
+      name: etcd
+      repository: https://charts.bitnami.com/bitnami
+      tags:
+      - storage
+      version: 4.9.1
+    - condition: vault.enabled
+      name: vault
+      repository: https://helm.releases.hashicorp.com
+      tags:
+      - credentials
+      version: 0.6.0
+    description: A Helm chart for Kubernetes
+    digest: e65fda034481b25710c386eae8c21f8f0459209f87dbcc87e64bba9f8db30bfd
+    name: a2ml
+    type: application
+    urls:
+    - https://github.com/augerai/charts/releases/download/a2ml-0.1.8/a2ml-0.1.8.tgz
+    version: 0.1.8
+  - apiVersion: v2
+    appVersion: v0.4.0
     created: "2020-08-06T15:30:11.983182095Z"
     dependencies:
     - condition: minio.enabled
