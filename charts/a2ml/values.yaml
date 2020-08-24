@@ -6,6 +6,7 @@ replicaCount: 1
 
 # RabbitMQ broker url for celery workers
 brokerUrl: ""
+brokerHttpUrl: ""
 
 extraEnvironmentVars: {}
 

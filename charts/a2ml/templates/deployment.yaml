@@ -45,6 +45,11 @@ spec:
               secretKeyRef:
                 name: {{ template "a2ml.fullname" . }}
                 key: brokerUrl
+          - name: BROKER_HTTP_URL
+            valueFrom:
+              secretKeyRef:
+                name: {{ template "a2ml.fullname" . }}
+                key: brokerHttpUrl
           {{- if .Values.minio.enabled }}
           - name: S3_ENDPOINT_URL
             valueFrom:
