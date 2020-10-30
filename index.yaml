@@ -2,35 +2,6 @@ apiVersion: v1
 entries:
   a2ml:
   - apiVersion: v2
-    appVersion: v0.6.7
-    created: "2020-10-30T00:48:03.551933732Z"
-    dependencies:
-    - condition: minio.enabled
-      name: minio
-      repository: https://helm.min.io
-      tags:
-      - storage
-      version: 6.3.1
-    - condition: minio.enabled
-      name: etcd
-      repository: https://charts.bitnami.com/bitnami
-      tags:
-      - storage
-      version: 4.11.0
-    - condition: vault.enabled
-      name: vault
-      repository: https://helm.releases.hashicorp.com
-      tags:
-      - credentials
-      version: 0.7.0
-    description: A Helm chart for Kubernetes
-    digest: 0ceea676eceddf06a82513e2fdb175230b1597876c6189082981ed98bc34fc1e
-    name: a2ml
-    type: application
-    urls:
-    - https://github.com/augerai/charts/releases/download/a2ml-0.1.12/a2ml-0.1.12.tgz
-    version: 0.1.12
-  - apiVersion: v2
     appVersion: v0.4.0
     created: "2020-09-01T17:15:42.102394124Z"
     dependencies:
