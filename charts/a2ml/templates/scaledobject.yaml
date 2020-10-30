@@ -16,8 +16,8 @@ spec:
   - type: rabbitmq
     metadata:
       apiHost: BROKER_HTTP_URL
-      includeUnacked: {{ .Values.kedaAutoscaling.includeUnacked }}
-      queueName: {{ .Values.kedaAutoscaling.queueName }}
+      includeUnacked: {{ .Values.kedaAutoscaling.includeUnacked | quote }}
+      queueName: "{{ .Values.kedaAutoscaling.queueName }}"
       host: BROKER_URL
-      queueLength: {{ .Values.kedaAutoscaling.queueLength }}
+      queueLength: {{ .Values.kedaAutoscaling.queueLength | quote }}
 {{- end }}
