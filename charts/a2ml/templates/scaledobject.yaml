@@ -1,0 +1,23 @@
+{{- if .Values.kedaAutoscaling.enabled }}
+apiVersion: keda.k8s.io/v1alpha1
+kind: ScaledObject
+metadata:
+  name: {{ include "a2ml.fullname" . }}
+  labels:
+    deploymentName: {{ include "a2ml.fullname" . }}
+spec:
+  scaleTargetRef:
+    deploymentName: {{ include "a2ml.fullname" . }}
+  pollingInterval: {{ .Values.kedaAutoscaling.pollingInterval }}
+  cooldownPeriod: {{ .Values.kedaAutoscaling.cooldownPeriod }}
+  minReplicaCount: {{ .Values.kedaAutoscaling.minReplicaCount }}
+  maxReplicaCount: {{ .Values.kedaAutoscaling.maxReplicaCount }}
+  triggers:
+  - type: rabbitmq
+    metadata:
+      apiHost: BROKER_HTTP_URL
+      includeUnacked: {{ .Values.kedaAutoscaling.includeUnacked }}
+      queueName: {{ .Values.kedaAutoscaling.queueName }}
+      host: BROKER_URL
+      queueLength: {{ .Values.kedaAutoscaling.queueLength }}
+{{- end }}
