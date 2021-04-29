@@ -1,0 +1,56 @@
+---
+apiVersion: keda.k8s.io/v1alpha1
+kind: ScaledObject
+metadata:
+  name: augerml-optimizers-worker
+  labels:
+    deploymentName: augerml-optimizers-worker
+    auger.ai/component-name: augerml
+spec:
+  scaleTargetRef:
+    deploymentName: augerml-optimizers-worker
+  pollingInterval: {{ tpl (print .Values.kedaAutoscaling.polling_interval) . }}
+  cooldownPeriod: {{ min .Values.kedaAutoscaling.cooldown_period 900 }}
+  minReplicaCount: {{ tpl (print .Values.kedaAutoscaling.min_optimizers_count) . }}
+  maxReplicaCount: {{ tpl (print .Values.kedaAutoscaling.max_optimizers_count) . }}
+  triggers:
+  - type: rabbitmq
+    metadata:
+      queueName: 'evaluate_api'
+      apiHost: BROKER_HTTP_URL
+      includeUnacked: 'true'
+      queueLength: {{ .Values.kedaAutoscaling.queue_length | quote }}
+  - type: rabbitmq
+    metadata:
+      queueName: 'evaluate_optimizers'
+      apiHost: BROKER_HTTP_URL
+      includeUnacked: 'true'
+      queueLength: {{ .Values.kedaAutoscaling.queue_length | quote }}
+---
+apiVersion: keda.k8s.io/v1alpha1
+kind: ScaledObject
+metadata:
+  name: augerml-trials-worker
+  labels:
+    deploymentName: augerml-trials-worker
+    auger.ai/component-name: augerml
+spec:
+  scaleTargetRef:
+    deploymentName: augerml-trials-worker
+  pollingInterval: {{ tpl (print .Values.kedaAutoscaling.polling_interval) . }}
+  cooldownPeriod: {{ min .Values.cooldown_period 900 }}
+  minReplicaCount: {{ tpl (print .Values.kedaAutoscaling.min_trials_count) . }}
+  maxReplicaCount: {{ tpl (print .Values.kedaAutoscaling.max_trials_count) . }}
+  triggers:
+  - type: rabbitmq
+    metadata:
+      apiHost: BROKER_HTTP_URL
+      includeUnacked: 'true'
+      queueName: 'evaluate_trials'
+      queueLength: {{ .Values.kedaAutoscaling.queue_length | quote }}
+  - type: rabbitmq
+    metadata:
+      apiHost: BROKER_HTTP_URL
+      includeUnacked: 'true'
+      queueName: 'augerml_api'
+      queueLength: {{ .Values.kedaAutoscaling.queue_length | quote }}
