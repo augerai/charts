@@ -1,0 +1,94 @@
+# Docker repo details
+worker_repo:
+worker_type: standard
+image:
+  tag: multitenant
+  pull_policy: Always
+brokerUrl:
+brokerHttpUrl:
+
+# Celery configuration
+celery_command: celery -A auger_ml.tasks_queue.celery_app worker
+celery_args: -E --loglevel=info --prefetch-multiplier=1
+worker_cpu_count: 1
+optimizer_celery_queues: "evaluate_optimizers,evaluate_api"
+trial_celery_queues: "evaluate_trials,augerml_api"
+trial_celery_extra_args: "-c {{ .Values.worker_cpu_count }} -Ofair --max-tasks-per-child=1 --queues"
+optimizers_celery_extra_args: --max-tasks-per-child=1 --queues
+worker_shutdown_grace_period: 7200
+
+kedaAutoscaling:
+  polling_interval: 10
+  cooldown_period: 900
+  queue_length: 4
+  min_optimizers_count: 0
+  max_optimizers_count: 2
+  min_trials_count: 1
+  max_trials_count: 2
+
+env:
+  auger_ram_limit_mb: 8192
+  auger_total_workers_cpu_count: 16
+  auger_worker_cpu_count: 8
+  optimizers_service_url: https://optimizers-staging.auger.ai
+
+resources:
+  optimizer:
+    requests:
+      cpu: 250m
+      memory: 512Mi
+    limits:
+      cpu: 1000m
+      memory: 1024Mi
+  trial:
+    requests:
+      cpu: 1000m
+      memory: 2048Mi
+    limits:
+      cpu: 2000m
+      memory: 4096Mi
+
+serviceAccount:
+  # Specifies whether a service account should be created
+  create: true
+  # Annotations to add to the service account
+  annotations: {}
+  # The name of the service account to use.
+  # If not set and create is true, a name is generated using the fullname template
+  name: ""
+# etcd:
+#   persistence:
+#     enabled: false
+
+vault:
+  enabled: true
+  injector:
+    enabled: true
+  namespaceSelector:
+    matchLabels:
+      injection: enabled
+  standalone:
+    enabled: true
+  service:
+    enabled: true
+  dataStorage:
+    enabled: true
+    size: 1Gi
+    accessMode: ReadWriteOnce
+
+# minio:
+#   enabled: false
+#   buckets:
+#     - name: auger-a2ml-incoming
+#       policy: none
+#       purge: false
+#   environment:
+#     MINIO_CACHE_EXPIRY: "30"
+#     MINIO_CACHE_MAXUSE: "80"
+#     MINIO_CACHE_DRIVES: "/tmp"
+#   mode: standalone
+#   replicas: 1
+#   resources:
+#     requests:
+#       cpu: 100m
+#       memory: 100Mi

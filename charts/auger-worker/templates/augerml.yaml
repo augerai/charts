@@ -1,0 +1,176 @@
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: prestop-hook
+  labels:
+    auger.ai/component-name: augerml
+data:
+  prestop.py: |
+    #!/usr/bin/env python
+    from itertools import repeat
+    from auger_ml.tasks_queue.celery_app import celeryApp
+    import os
+    from time import sleep
+
+    worker_name = "celery@{}".format(os.environ.get('HOSTNAME'))
+    queue_names = "{{ .Values.trial_celery_queues }},{{ .Values.optimizer_celery_queues }}".split(',')
+    consumer_canceled = False
+
+    for _ in repeat(None, {{ .Values.worker_shutdown_grace_period }}):
+      if not consumer_canceled:
+        for queue_name in queue_names:
+          celeryApp.control.cancel_consumer(queue_name, destination=[worker_name])
+          consumer_canceled = True
+
+      worker_active = celeryApp.control.inspect(destination=[worker_name]).active()
+      if bool(worker_active) and all(worker_active.values()):
+        sleep(1)
+      else:
+        exit(0)
+
+---
+# Optimizers worker section
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: augerml-optimizers-worker
+  labels:
+    name: augerml-optimizers-worker
+    auger.ai/component-name: augerml
+spec:
+  selector:
+    matchLabels:
+      name: augerml-optimizers-worker
+  replicas: 0
+  template:
+    metadata:
+      labels:
+        name: augerml-optimizers-worker
+      annotations:
+        cluster-autoscaler.kubernetes.io/safe-to-evict: "false"
+    spec:
+      serviceAccountName: {{ include "auger.serviceAccountName" . }}
+      nodeSelector:
+        role: operations
+      containers:
+      - name: augerml-optimizers-worker
+        image: {{ .Values.worker_repo }}:{{ .Values.image.tag }}
+        imagePullPolicy: {{ .Values.image.pull_policy }}
+        command: ["/bin/bash", "-c", "--"]
+        args: ["{{ .Values.celery_command }} {{ .Values.optimizers_celery_extra_args }} {{ .Values.optimizer_celery_queues }} {{ .Values.celery_args }}"]
+        lifecycle:
+          preStop:
+            exec:
+              # Trigger a graceful shutdown of the worker by sending SIGTERM and waiting for process exit
+              command: ["python", "/tmp/scripts/prestop.py"]
+        volumeMounts:
+        - name: prestop-script
+          mountPath: /tmp/scripts
+        env:
+        - name: AUGER_RAM_LIMIT_MB
+          value: "{{ .Values.env.auger_ram_limit_mb }}"
+        - name: AUGER_TOTAL_WORKERS_CPU_COUNT
+          value: "{{ .Values.env.auger_total_workers_cpu_count }}"
+        - name: AUGER_WORKER_CPU_COUNT
+          value: "{{ .Values.env.auger_worker_cpu_count }}"
+        - name: OPTIMIZERS_SERVICE_URL
+          value: "{{ .Values.env.optimizers_service_url }}"
+        - name: BROKER_URL
+          valueFrom:
+            secretKeyRef:
+              name: auger-creds
+              key: brokerUrl
+        - name: BROKER_HTTP_URL
+          valueFrom:
+            secretKeyRef:
+              name: auger-creds
+              key: brokerHttpUrl
+        resources:
+          requests:
+            cpu: "{{ tpl .Values.resources.optimizer.requests.cpu . }}"
+            memory: "{{ tpl .Values.resources.optimizer.requests.memory . }}"
+          limits:
+            cpu: "{{ tpl .Values.resources.optimizer.limits.cpu . }}"
+            memory: "{{ tpl .Values.resources.optimizer.limits.memory . }}"
+      volumes:
+      - name: prestop-script
+        configMap:
+          name: prestop-hook
+      restartPolicy: Always
+      terminationGracePeriodSeconds: {{ .Values.worker_shutdown_grace_period }}
+
+---
+# Trials worker section
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: augerml-trials-worker
+  labels:
+    name: augerml-trials-worker
+    auger.ai/component-name: augerml
+spec:
+  selector:
+    matchLabels:
+      name: augerml-trials-worker
+  replicas: 0
+  template:
+    metadata:
+      labels:
+        name: augerml-trials-worker
+      annotations:
+        cluster-autoscaler.kubernetes.io/safe-to-evict: "false"
+    spec:
+      serviceAccountName: {{ include "auger.serviceAccountName" . }}
+      nodeSelector:
+        role: "worker-{{ if eq .Values.worker_type "gpu" }}gpu{{ else }}standard{{ end }}"
+      containers:
+      - name: augerml-trials-worker
+        image: {{ .Values.worker_repo }}:{{ if eq .Values.worker_type "gpu" }}gpu-{{ else }}{{ end }}{{ .Values.image.tag }}
+        imagePullPolicy: {{ .Values.image.pull_policy }}
+        command: ["/bin/bash", "-c", "--"]
+        args: ["{{ .Values.celery_command }} {{ tpl .Values.trial_celery_extra_args . }} {{ .Values.trial_celery_queues }} {{ .Values.celery_args }}"]
+        lifecycle:
+          preStop:
+            exec:
+              # Trigger a graceful shutdown of the worker by sending SIGTERM and waiting for process exit
+              command: ["python", "/tmp/scripts/prestop.py"]
+        volumeMounts:
+          - name: prestop-script
+            mountPath: /tmp/scripts
+        env:
+        - name: AUGER_RAM_LIMIT_MB
+          value: "{{ .Values.env.auger_ram_limit_mb }}"
+        - name: AUGER_TOTAL_WORKERS_CPU_COUNT
+          value: "{{ .Values.env.auger_total_workers_cpu_count }}"
+        - name: AUGER_WORKER_CPU_COUNT
+          value: "{{ .Values.env.auger_worker_cpu_count }}"
+        - name: OPTIMIZERS_SERVICE_URL
+          value: "{{ .Values.env.optimizers_service_url }}"
+        - name: BROKER_URL
+          valueFrom:
+            secretKeyRef:
+              name: auger-creds
+              key: brokerUrl
+        - name: BROKER_HTTP_URL
+          valueFrom:
+            secretKeyRef:
+              name: auger-creds
+              key: brokerHttpUrl
+
+        resources:
+          requests:
+            cpu: "{{ tpl .Values.resources.trial.requests.cpu . }}"
+            memory: "{{ tpl .Values.resources.trial.requests.memory . }}"
+          limits:
+            cpu: "{{ tpl .Values.resources.trial.limits.cpu . }}"
+            memory: "{{ tpl .Values.resources.trial.limits.memory . }}"
+        {{- if eq .Values.worker_type "gpu" }}
+            nvidia.com/gpu: 1
+        {{- end }}
+      volumes:
+      - name: prestop-script
+        configMap:
+          name: prestop-hook
+      restartPolicy: Always
+      terminationGracePeriodSeconds: {{ .Values.worker_shutdown_grace_period }}
