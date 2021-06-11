@@ -20,10 +20,11 @@ worker_shutdown_grace_period: 7200
 kedaAutoscaling:
   polling_interval: 10
   cooldown_period: 900
-  queue_length: 4
+  trial_queue_length: 8
+  optimizer_queue_length: 1
   min_optimizers_count: 0
   max_optimizers_count: 2
-  min_trials_count: 1
+  min_trials_count: 0
   max_trials_count: 2
 
 env:

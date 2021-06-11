@@ -19,13 +19,13 @@ spec:
       queueName: 'evaluate_api'
       apiHost: BROKER_HTTP_URL
       includeUnacked: 'true'
-      queueLength: {{ .Values.kedaAutoscaling.queue_length | quote }}
+      queueLength: {{ .Values.kedaAutoscaling.optimizer_queue_length | quote }}
   - type: rabbitmq
     metadata:
       queueName: 'evaluate_optimizers'
       apiHost: BROKER_HTTP_URL
       includeUnacked: 'true'
-      queueLength: {{ .Values.kedaAutoscaling.queue_length | quote }}
+      queueLength: {{ .Values.kedaAutoscaling.optimizer_queue_length | quote }}
 ---
 apiVersion: keda.k8s.io/v1alpha1
 kind: ScaledObject
@@ -47,10 +47,10 @@ spec:
       apiHost: BROKER_HTTP_URL
       includeUnacked: 'true'
       queueName: 'evaluate_trials'
-      queueLength: {{ .Values.kedaAutoscaling.queue_length | quote }}
+      queueLength: {{ .Values.kedaAutoscaling.trial_queue_length | quote }}
   - type: rabbitmq
     metadata:
       apiHost: BROKER_HTTP_URL
       includeUnacked: 'true'
       queueName: 'augerml_api'
-      queueLength: {{ .Values.kedaAutoscaling.queue_length | quote }}
+      queueLength: {{ .Values.kedaAutoscaling.trial_queue_length | quote }}
