@@ -71,7 +71,7 @@ spec:
         - name: AUGER_RAM_LIMIT_MB
           value: "{{ .Values.env.auger_ram_limit_mb }}"
         - name: AUGER_TOTAL_WORKERS_CPU_COUNT
-          value: "{{ .Values.env.auger_total_workers_cpu_count }}"
+          value: "{{ tpl .Values.env.auger_total_workers_cpu_count . }}"
         - name: AUGER_WORKER_CPU_COUNT
           value: "{{ .Values.env.auger_worker_cpu_count }}"
         - name: OPTIMIZERS_SERVICE_URL
@@ -142,7 +142,7 @@ spec:
         - name: AUGER_RAM_LIMIT_MB
           value: "{{ .Values.env.auger_ram_limit_mb }}"
         - name: AUGER_TOTAL_WORKERS_CPU_COUNT
-          value: "{{ .Values.env.auger_total_workers_cpu_count }}"
+          value: "{{ tpl .Values.env.auger_total_workers_cpu_count . }}"
         - name: AUGER_WORKER_CPU_COUNT
           value: "{{ .Values.env.auger_worker_cpu_count }}"
         - name: OPTIMIZERS_SERVICE_URL
