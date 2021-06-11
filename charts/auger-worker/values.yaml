@@ -7,31 +7,32 @@ image:
 brokerUrl:
 brokerHttpUrl:
 
-# Celery configuration
-celery_command: celery -A auger_ml.tasks_queue.celery_app worker
-celery_args: -E --loglevel=info --prefetch-multiplier=1
-worker_cpu_count: 1
-optimizer_celery_queues: "evaluate_optimizers,evaluate_api"
-trial_celery_queues: "evaluate_trials,augerml_api"
-trial_celery_extra_args: "-c {{ .Values.worker_cpu_count }} -Ofair --max-tasks-per-child=1 --queues"
-optimizers_celery_extra_args: --max-tasks-per-child=1 --queues
-worker_shutdown_grace_period: 7200
+env:
+  auger_ram_limit_mb: 8192
+  # Max count of workers per project
+  auger_worker_count: 2
+  auger_worker_cpu_count: 8
+  auger_total_workers_cpu_count: "{{ mul .Values.env.auger_worker_count .Values.env.auger_worker_cpu_count }}"
+  optimizers_service_url: https://optimizers-staging.auger.ai
 
 kedaAutoscaling:
   polling_interval: 10
   cooldown_period: 900
-  trial_queue_length: 8
+  trial_queue_length: "{{ .Values.env.auger_worker_cpu_count }}"
   optimizer_queue_length: 1
   min_optimizers_count: 0
   max_optimizers_count: 2
   min_trials_count: 0
   max_trials_count: 2
 
-env:
-  auger_ram_limit_mb: 8192
-  auger_total_workers_cpu_count: 16
-  auger_worker_cpu_count: 8
-  optimizers_service_url: https://optimizers-staging.auger.ai
+# Celery configuration
+celery_command: celery -A auger_ml.tasks_queue.celery_app worker
+celery_args: -E --loglevel=info --prefetch-multiplier=1
+optimizer_celery_queues: "evaluate_optimizers,evaluate_api"
+trial_celery_queues: "evaluate_trials,augerml_api"
+trial_celery_extra_args: "-c {{ .Values.env.auger_worker_cpu_count }} -Ofair --max-tasks-per-child=1 --queues"
+optimizers_celery_extra_args: --max-tasks-per-child=1 --queues
+worker_shutdown_grace_period: 7200
 
 resources:
   optimizer:
@@ -57,9 +58,6 @@ serviceAccount:
   # The name of the service account to use.
   # If not set and create is true, a name is generated using the fullname template
   name: ""
-# etcd:
-#   persistence:
-#     enabled: false
 
 vault:
   enabled: true
@@ -76,20 +74,3 @@ vault:
     enabled: true
     size: 1Gi
     accessMode: ReadWriteOnce
-
-# minio:
-#   enabled: false
-#   buckets:
-#     - name: auger-a2ml-incoming
-#       policy: none
-#       purge: false
-#   environment:
-#     MINIO_CACHE_EXPIRY: "30"
-#     MINIO_CACHE_MAXUSE: "80"
-#     MINIO_CACHE_DRIVES: "/tmp"
-#   mode: standalone
-#   replicas: 1
-#   resources:
-#     requests:
-#       cpu: 100m
-#       memory: 100Mi
