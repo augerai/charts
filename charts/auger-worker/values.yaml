@@ -14,6 +14,8 @@ env:
   auger_worker_cpu_count: 8
   auger_total_workers_cpu_count: "{{ mul .Values.env.auger_worker_count .Values.env.auger_worker_cpu_count }}"
   optimizers_service_url: https://optimizers-staging.auger.ai
+  logstash_host: logstash-logstash.logging.svc.cluster.local
+  logstash_port: 5000
 
 kedaAutoscaling:
   polling_interval: 10

@@ -68,6 +68,10 @@ spec:
         - name: prestop-script
           mountPath: /tmp/scripts
         env:
+        - name: LOGSTASH_HOST
+          value: {{ .Values.env.logstash_host }}
+        - name: LOGSTASH_PORT
+          value: "{{ .Values.env.logstash_port }}"
         - name: AUGER_RAM_LIMIT_MB
           value: "{{ .Values.env.auger_ram_limit_mb }}"
         - name: AUGER_TOTAL_WORKERS_CPU_COUNT
@@ -139,6 +143,10 @@ spec:
           - name: prestop-script
             mountPath: /tmp/scripts
         env:
+        - name: LOGSTASH_HOST
+          value: {{ .Values.env.logstash_host }}
+        - name: LOGSTASH_PORT
+          value: "{{ .Values.env.logstash_port }}"
         - name: AUGER_RAM_LIMIT_MB
           value: "{{ .Values.env.auger_ram_limit_mb }}"
         - name: AUGER_TOTAL_WORKERS_CPU_COUNT
