@@ -8,6 +8,7 @@ brokerUrl:
 brokerHttpUrl:
 
 env:
+  auger_worker_cpu_count: 2
   auger_worker_ram_limit: "{{ .Values.resources.trial.limits.memory }}"
   auger_worker_cpu_limit: "{{ .Values.resources.trial.limits.cpu }}"
   optimizers_service_url: https://optimizers-staging.auger.ai
