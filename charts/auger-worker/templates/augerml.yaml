@@ -90,11 +90,11 @@ spec:
               key: brokerHttpUrl
         resources:
           requests:
-            cpu: "{{ tpl .Values.resources.optimizer.requests.cpu . }}"
-            memory: "{{ tpl .Values.resources.optimizer.requests.memory . }}"
+            cpu: "{{ .Values.resources.optimizer.requests.cpu }}"
+            memory: "{{ .Values.resources.optimizer.requests.memory }}"
           limits:
-            cpu: "{{ tpl .Values.resources.optimizer.limits.cpu . }}"
-            memory: "{{ tpl .Values.resources.optimizer.limits.memory . }}"
+            cpu: "{{ .Values.resources.optimizer.limits.cpu }}"
+            memory: "{{ .Values.resources.optimizer.limits.memory }}"
       volumes:
       - name: prestop-script
         configMap:
@@ -164,11 +164,11 @@ spec:
 
         resources:
           requests:
-            cpu: "{{ tpl .Values.resources.trial.requests.cpu . }}"
-            memory: "{{ tpl .Values.resources.trial.requests.memory . }}"
+            cpu: "{{ .Values.resources.trial.requests.cpu }}"
+            memory: "{{ .Values.resources.trial.requests.memory }}"
           limits:
-            cpu: "{{ tpl .Values.resources.trial.limits.cpu . }}"
-            memory: "{{ tpl .Values.resources.trial.limits.memory . }}"
+            cpu: "{{ .Values.resources.trial.limits.cpu }}"
+            memory: "{{ .Values.resources.trial.limits.memory }}"
         {{- if eq .Values.worker_type "gpu" }}
             nvidia.com/gpu: 1
         {{- end }}
