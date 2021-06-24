@@ -8,11 +8,8 @@ brokerUrl:
 brokerHttpUrl:
 
 env:
-  auger_ram_limit_mb: 8192
-  # Max count of workers per project
-  auger_worker_count: 2
-  auger_worker_cpu_count: 8
-  auger_total_workers_cpu_count: "{{ mul .Values.env.auger_worker_count .Values.env.auger_worker_cpu_count }}"
+  auger_worker_ram_limit: "{{ .Values.resources.trial.limits.memory }}"
+  auger_worker_cpu_limit: "{{ .Values.resources.trial.limits.cpu }}"
   optimizers_service_url: https://optimizers-staging.auger.ai
   logstash_host: logstash-logstash.logging.svc.cluster.local
   logstash_port: 5000

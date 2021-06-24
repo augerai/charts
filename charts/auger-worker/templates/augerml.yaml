@@ -72,12 +72,10 @@ spec:
           value: {{ .Values.env.logstash_host }}
         - name: LOGSTASH_PORT
           value: "{{ .Values.env.logstash_port }}"
-        - name: AUGER_RAM_LIMIT_MB
-          value: "{{ .Values.env.auger_ram_limit_mb }}"
-        - name: AUGER_TOTAL_WORKERS_CPU_COUNT
-          value: "{{ tpl .Values.env.auger_total_workers_cpu_count . }}"
-        - name: AUGER_WORKER_CPU_COUNT
-          value: "{{ .Values.env.auger_worker_cpu_count }}"
+        - name: AUGER_WORKER_RAM_LIMIT
+          value: "{{ tpl .Values.env.auger_worker_ram_limit . }}"
+        - name: AUGER_WORKER_CPU_LIMIT
+          value: "{{ tpl .Values.env.auger_worker_cpu_limit . }}"
         - name: OPTIMIZERS_SERVICE_URL
           value: "{{ .Values.env.optimizers_service_url }}"
         - name: BROKER_URL
@@ -147,12 +145,10 @@ spec:
           value: {{ .Values.env.logstash_host }}
         - name: LOGSTASH_PORT
           value: "{{ .Values.env.logstash_port }}"
-        - name: AUGER_RAM_LIMIT_MB
-          value: "{{ .Values.env.auger_ram_limit_mb }}"
-        - name: AUGER_TOTAL_WORKERS_CPU_COUNT
-          value: "{{ tpl .Values.env.auger_total_workers_cpu_count . }}"
-        - name: AUGER_WORKER_CPU_COUNT
-          value: "{{ .Values.env.auger_worker_cpu_count }}"
+        - name: AUGER_WORKER_RAM_LIMIT
+          value: "{{ tpl .Values.env.auger_worker_ram_limit . }}"
+        - name: AUGER_WORKER_CPU_LIMIT
+          value: "{{ tpl .Values.env.auger_worker_cpu_limit . }}"
         - name: OPTIMIZERS_SERVICE_URL
           value: "{{ .Values.env.optimizers_service_url }}"
         - name: BROKER_URL
