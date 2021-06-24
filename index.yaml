@@ -410,6 +410,16 @@ entries:
   auger-worker:
   - apiVersion: v1
     appVersion: v1.0.0
+    created: "2021-06-24T16:39:56.724659898Z"
+    description: Helm Chart for Auger Worker
+    digest: 7de7f99e63b004e7ec36732f0badb360ab98373452a137fdd68024efd9d7f86b
+    name: auger-worker
+    type: application
+    urls:
+    - https://github.com/augerai/charts/releases/download/auger-worker-0.1.5/auger-worker-0.1.5.tgz
+    version: 0.1.5
+  - apiVersion: v1
+    appVersion: v1.0.0
     created: "2021-06-24T14:23:19.355733126Z"
     description: Helm Chart for Auger Worker
     digest: 214a81c1bab71552329cf7b00c8476e639d03eb9a8c89c787d64e77d4e47d4a6
