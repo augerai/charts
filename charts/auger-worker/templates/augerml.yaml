@@ -58,7 +58,7 @@ spec:
         image: {{ .Values.worker_repo }}:{{ .Values.image.tag }}
         imagePullPolicy: {{ .Values.image.pull_policy }}
         command: ["/bin/bash", "-c", "--"]
-        args: ["{{ .Values.celery_command }} {{ .Values.optimizers_celery_extra_args }} {{ .Values.optimizer_celery_queues }} {{ .Values.celery_args }}"]
+        args: ["{{ .Values.celery_command }} {{ tpl .Values.optimizers_celery_extra_args . }} {{ .Values.optimizer_celery_queues }} {{ .Values.celery_args }}"]
         lifecycle:
           preStop:
             exec:
