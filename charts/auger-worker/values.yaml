@@ -31,7 +31,7 @@ celery_args: -E --loglevel=info --prefetch-multiplier=1
 optimizer_celery_queues: "evaluate_optimizers,evaluate_api"
 trial_celery_queues: "evaluate_trials,augerml_api"
 trial_celery_extra_args: "-c {{ .Values.env.auger_worker_cpu_count }} -Ofair --max-tasks-per-child=1 --queues"
-optimizers_celery_extra_args: --max-tasks-per-child=1 --queues
+optimizers_celery_extra_args: "-c {{ .Values.resources.optimizer.limits.cpu }} --max-tasks-per-child=1 --queues"
 worker_shutdown_grace_period: 7200
 
 resources:
@@ -40,14 +40,14 @@ resources:
       cpu: 250m
       memory: 512Mi
     limits:
-      cpu: 1000m
+      cpu: "1"
       memory: 1024Mi
   trial:
     requests:
-      cpu: 1000m
+      cpu: "1"
       memory: 2048Mi
     limits:
-      cpu: 2000m
+      cpu: "2"
       memory: 4096Mi
 
 serviceAccount:
