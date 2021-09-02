@@ -65,16 +65,6 @@ rollme: {{ randAlphaNum 5 | quote }}
 {{- end }}
 {{- if .Values.vault.enabled }}
 vault.hashicorp.com/agent-inject: "true"
-vault.hashicorp.com/agent-inject-secret-azure-creds: "azure/creds/a2ml"
-vault.hashicorp.com/agent-inject-template-azure-creds: |
-  {
-    "subscription_id": "{{ .Values.vaultSubscriptionId }}",
-    "directory_tenant_id": "{{ .Values.vaultTenantId }}",
-  {{`{{- with secret "azure/creds/a2ml" -}}
-    "application_client_id": "{{ .Data.client_id }}",
-    "client_secret": "{{ .Data.client_secret}}"
-  {{- end }}`}}
-  }
 vault.hashicorp.com/role: "app"
 {{- end }}
 {{- end }}
