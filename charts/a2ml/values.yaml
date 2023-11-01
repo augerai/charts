@@ -73,18 +73,18 @@ etcd:
     enabled: false
 
 vault:
-  enabled: true
+  enabled: false
   injector:
-    enabled: true
+    enabled: false
   namespaceSelector:
     matchLabels:
       injection: enabled
   standalone:
-    enabled: true
+    enabled: false
   service:
-    enabled: true
+    enabled: false
   dataStorage:
-    enabled: true
+    enabled: false
     size: 1Gi
     accessMode: ReadWriteOnce
 
