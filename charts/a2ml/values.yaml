@@ -69,6 +69,7 @@ affinity: {}
 workerConcurrency: 4
 
 etcd:
+  enabled: false
   persistence:
     enabled: false
 
