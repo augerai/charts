@@ -3,6 +3,16 @@ entries:
   a2ml:
   - apiVersion: v2
     appVersion: v0.6.7
+    created: "2023-11-01T02:09:26.684887321Z"
+    description: A Helm chart for Kubernetes
+    digest: a74199716b64d0ab6224edd9f2668ae284f3ea55f4da0b4f6ac288728d6b62f2
+    name: a2ml
+    type: application
+    urls:
+    - https://github.com/augerai/charts/releases/download/a2ml-0.1.16/a2ml-0.1.16.tgz
+    version: 0.1.16
+  - apiVersion: v2
+    appVersion: v0.6.7
     created: "2021-09-02T18:02:01.677265639Z"
     dependencies:
     - condition: minio.enabled
