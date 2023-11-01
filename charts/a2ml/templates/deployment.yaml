@@ -36,10 +36,6 @@ spec:
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
           env:
-          {{- if .Values.vault.enabled }}
-          - name: AZURE_CREDENTIALS_PATH
-            value: /vault/secrets/azure-creds
-          {{- end }}
           - name: BROKER_URL
             valueFrom:
               secretKeyRef:

@@ -63,20 +63,6 @@ rollme: {{ randAlphaNum 5 | quote }}
 {{- if .Values.podAnnotations }}
 {{ .Values.podAnnotations }}
 {{- end }}
-{{- if .Values.vault.enabled }}
-vault.hashicorp.com/agent-inject: "true"
-vault.hashicorp.com/agent-inject-secret-azure-creds: "azure/creds/auger"
-vault.hashicorp.com/agent-inject-template-azure-creds: |
-  {
-    "subscription_id": "{{ .Values.vaultSubscriptionId }}",
-    "directory_tenant_id": "{{ .Values.vaultTenantId }}",
-  {{`{{- with secret "azure/creds/auger" -}}
-    "application_client_id": "{{ .Data.client_id }}",
-    "client_secret": "{{ .Data.client_secret}}"
-  {{- end }}`}}
-  }
-vault.hashicorp.com/role: "app"
-{{- end }}
 {{- end }}
 
 
@@ -140,19 +126,3 @@ Used to discover the Service and Secret name created by the sub-chart.
 {{- end -}}
 {{- end -}}
 
-{{/*
-Construct the `vault.fullname` of the vault sub-chart.
-Used to discover the Service and Secret name created by the sub-chart.
-*/}}
-{{- define "auger.vault.fullname" -}}
-{{- if .Values.vault.fullnameOverride -}}
-{{- .Values.vault.fullnameOverride | trunc 63 | trimSuffix "-" -}}
-{{- else -}}
-{{- $name := default "vault" .Values.vault.nameOverride -}}
-{{- if contains $name .Release.Name -}}
-{{- .Release.Name | trunc 63 | trimSuffix "-" -}}
-{{- else -}}
-{{- printf "%s-%s" .Release.Name $name | trunc 63 | trimSuffix "-" -}}
-{{- end -}}
-{{- end -}}
-{{- end -}}

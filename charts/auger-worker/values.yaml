@@ -58,19 +58,3 @@ serviceAccount:
   # The name of the service account to use.
   # If not set and create is true, a name is generated using the fullname template
   name: ""
-
-vault:
-  enabled: false
-  injector:
-    enabled: false
-  namespaceSelector:
-    matchLabels:
-      injection: enabled
-  standalone:
-    enabled: false
-  service:
-    enabled: false
-  dataStorage:
-    enabled: false
-    size: 1Gi
-    accessMode: ReadWriteOnce

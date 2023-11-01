@@ -73,22 +73,6 @@ etcd:
   persistence:
     enabled: false
 
-vault:
-  enabled: false
-  injector:
-    enabled: false
-  namespaceSelector:
-    matchLabels:
-      injection: enabled
-  standalone:
-    enabled: false
-  service:
-    enabled: false
-  dataStorage:
-    enabled: false
-    size: 1Gi
-    accessMode: ReadWriteOnce
-
 kedaAutoscaling:
   enabled: false
   pollingInterval: 5
