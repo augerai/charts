@@ -3,6 +3,16 @@ entries:
   a2ml:
   - apiVersion: v2
     appVersion: v0.6.7
+    created: "2023-11-01T02:17:51.55885361Z"
+    description: A Helm chart for Kubernetes
+    digest: 1030412bd647e57a68914ba88fff9dd97040223f1648051c132667a93b2f632e
+    name: a2ml
+    type: application
+    urls:
+    - https://github.com/augerai/charts/releases/download/a2ml-0.1.17/a2ml-0.1.17.tgz
+    version: 0.1.17
+  - apiVersion: v2
+    appVersion: v0.6.7
     created: "2023-11-01T02:09:26.684887321Z"
     description: A Helm chart for Kubernetes
     digest: a74199716b64d0ab6224edd9f2668ae284f3ea55f4da0b4f6ac288728d6b62f2
@@ -447,6 +457,16 @@ entries:
     - https://github.com/augerai/charts/releases/download/a2ml-0.1.0/a2ml-0.1.0.tgz
     version: 0.1.0
   auger-worker:
+  - apiVersion: v1
+    appVersion: v1.0.0
+    created: "2023-11-01T02:17:51.654141292Z"
+    description: Helm Chart for Auger Worker
+    digest: e0fe2db350edaaa828d4c9ad9f98f6175b67b8c47c9ac635b31cb9a6bbc14ab6
+    name: auger-worker
+    type: application
+    urls:
+    - https://github.com/augerai/charts/releases/download/auger-worker-0.1.9/auger-worker-0.1.9.tgz
+    version: 0.1.9
   - apiVersion: v1
     appVersion: v1.0.0
     created: "2021-07-09T11:40:07.373497897Z"
