@@ -7,7 +7,7 @@ metadata:
     deploymentName: {{ include "a2ml.fullname" . }}
 spec:
   scaleTargetRef:
-    deploymentName: {{ include "a2ml.fullname" . }}
+    name: {{ include "a2ml.fullname" . }}
   pollingInterval: {{ .Values.kedaAutoscaling.pollingInterval }}
   cooldownPeriod: {{ .Values.kedaAutoscaling.cooldownPeriod }}
   minReplicaCount: {{ .Values.kedaAutoscaling.minReplicaCount }}

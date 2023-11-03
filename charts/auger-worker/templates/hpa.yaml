@@ -8,7 +8,7 @@ metadata:
     auger.ai/component-name: augerml
 spec:
   scaleTargetRef:
-    deploymentName: augerml-optimizers-worker
+    name: augerml-optimizers-worker
   pollingInterval: {{ tpl (print .Values.kedaAutoscaling.polling_interval) . }}
   cooldownPeriod: {{ min .Values.kedaAutoscaling.cooldown_period 900 }}
   minReplicaCount: {{ tpl (print .Values.kedaAutoscaling.min_optimizers_count) . }}
