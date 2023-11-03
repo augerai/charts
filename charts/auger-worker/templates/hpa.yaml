@@ -4,7 +4,6 @@ kind: ScaledObject
 metadata:
   name: augerml-optimizers-worker
   labels:
-    deploymentName: augerml-optimizers-worker
     auger.ai/component-name: augerml
 spec:
   scaleTargetRef:
@@ -32,11 +31,10 @@ kind: ScaledObject
 metadata:
   name: augerml-trials-worker
   labels:
-    deploymentName: augerml-trials-worker
     auger.ai/component-name: augerml
 spec:
   scaleTargetRef:
-    deploymentName: augerml-trials-worker
+    name: augerml-trials-worker
   pollingInterval: {{ tpl (print .Values.kedaAutoscaling.polling_interval) . }}
   cooldownPeriod: {{ min .Values.cooldown_period 900 }}
   minReplicaCount: {{ tpl (print .Values.kedaAutoscaling.min_trials_count) . }}

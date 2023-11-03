@@ -3,8 +3,6 @@ apiVersion: keda.sh/v1alpha1
 kind: ScaledObject
 metadata:
   name: {{ include "a2ml.fullname" . }}
-  labels:
-    deploymentName: {{ include "a2ml.fullname" . }}
 spec:
   scaleTargetRef:
     name: {{ include "a2ml.fullname" . }}
