@@ -13,9 +13,8 @@ spec:
   triggers:
   - type: rabbitmq
     metadata:
-      apiHost: BROKER_HTTP_URL
       includeUnacked: {{ .Values.kedaAutoscaling.includeUnacked | quote }}
       queueName: "{{ .Values.kedaAutoscaling.queueName }}"
-      host: BROKER_URL
+      hostFromEnv: BROKER_HTTP_URL
       queueLength: {{ .Values.kedaAutoscaling.queueLength | quote }}
 {{- end }}

@@ -16,13 +16,13 @@ spec:
   - type: rabbitmq
     metadata:
       queueName: 'evaluate_api'
-      apiHost: BROKER_HTTP_URL
+      hostFromEnv: BROKER_HTTP_URL
       includeUnacked: 'true'
       queueLength: {{ tpl (print .Values.kedaAutoscaling.optimizer_queue_length) . | quote }}
   - type: rabbitmq
     metadata:
       queueName: 'evaluate_optimizers'
-      apiHost: BROKER_HTTP_URL
+      hostFromEnv: BROKER_HTTP_URL
       includeUnacked: 'true'
       queueLength: {{ tpl (print .Values.kedaAutoscaling.optimizer_queue_length) . | quote }}
 ---
@@ -42,13 +42,13 @@ spec:
   triggers:
   - type: rabbitmq
     metadata:
-      apiHost: BROKER_HTTP_URL
+      hostFromEnv: BROKER_HTTP_URL
       includeUnacked: 'true'
       queueName: 'evaluate_trials'
       queueLength: {{ tpl (print .Values.kedaAutoscaling.trial_queue_length) . | quote }}
   - type: rabbitmq
     metadata:
-      apiHost: BROKER_HTTP_URL
+      hostFromEnv: BROKER_HTTP_URL
       includeUnacked: 'true'
       queueName: 'augerml_api'
       queueLength: {{ tpl (print .Values.kedaAutoscaling.trial_queue_length) . | quote }}
